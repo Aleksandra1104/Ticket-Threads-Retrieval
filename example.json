@@ -1,0 +1,14 @@
+{
+  "ticket_id": "TDX-NEW-001",
+  "status": "new",
+  "title": "User locked out after repeated sign-in failures",
+  "description": "Faculty member reports being unable to access email and the internal portal after several unsuccessful login attempts earlier this morning. User says the password should be correct but the system now shows the account as temporarily disabled.",
+  "messages": [
+    {
+      "author_name": "Faculty Member",
+      "author_role": "requester",
+      "created_at": "2026-04-02T09:00:00Z",
+      "text": "I tried signing into my email and the employee portal a few times this morning, and now it says my account is disabled. I am pretty sure I am using the right password."
+    }
+  ]
+}

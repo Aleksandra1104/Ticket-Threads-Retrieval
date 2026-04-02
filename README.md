@@ -62,7 +62,7 @@ The improvement was intentionally realistic and limited by three factors:
 
 This was still a valuable ML finding:
 
-> the primary bottleneck shifted from embedding retrieval quality to the **richness of resolution knowledge units**
+- the primary bottleneck shifted from embedding retrieval quality to the **richness of resolution knowledge units**
 
 In other words, the model usually retrieved the correct **resolution family**, but downstream usefulness is now more constrained by how detailed and actionable the stored fixes are.
 
@@ -79,7 +79,7 @@ IT support systems often contain thousands of historical tickets, but finding th
 
 This project solves that by learning embeddings that map:
 
-> **new issue phrasing → historical resolution family**
+- **new issue phrasing → historical resolution family**
 
 instead of relying on exact keyword overlap.
 

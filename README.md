@@ -111,12 +111,6 @@ The full workflow:
 * Local Ollama API
 * Example model: `qwen2.5:7b-instruct`
 
-### Core Libraries
-
-* `sentence-transformers`
-* `torch`
-* `numpy`
-* `requests`
 
 ---
 
@@ -226,7 +220,7 @@ This makes retrieval fast and numerically stable.
 
 A major finding from this project:
 
-> **retrieval quality became stronger than answer usefulness**
+- **retrieval quality became stronger than answer usefulness**
 
 The system reliably retrieved the correct resolution family for paraphrased tickets, but practical usefulness was limited by the brevity and generic phrasing of stored resolutions rather than by embedding retrieval quality.
 
@@ -235,28 +229,6 @@ My next major improvement step is richer resolution synthesis.
 
 ---
 
-## Recommended GitHub Structure
-
-Commit:
-
-* source scripts
-* README
-* synthetic sample data
-* processed pair data
-* evaluation reports
-
-Exclude:
-
-* `.venv/`
-* `models/`
-* `retrieval_index/`
-* checkpoints
-* `.npy`
-* large generated outputs
-
----
-
-## Future Improvements
 
 - Improve how resolutions are stored by generating richer fix summaries that include the root cause, steps taken, verification, and follow-up recommendations
 - Add category-level confusion matrix analysis to better understand which issue types are most often confused during retrieval

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Build SentenceTransformer training pairs from resolved TeamsDynamix tickets
 by using Ollama to analyze each ticket thread and extract:
@@ -88,6 +88,9 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, Iterator, List, Optional, Sequence, Tuple
 
 import requests
+
+from ticket_memory.extraction.ollama_extractor import OllamaThreadPairExtractor
+from ticket_memory.extraction.pipeline import extract_ticket_pairs
 
 
 # ------------------------------
@@ -949,7 +952,7 @@ def main() -> int:
         print(f"Failed to load tickets: {exc}", file=sys.stderr)
         return 1
 
-    ollama = OllamaClient(
+    ollama = OllamaThreadPairExtractor(
         base_url=args.ollama_base_url,
         model=args.ollama_model,
         timeout_seconds=args.timeout_seconds,
@@ -957,9 +960,9 @@ def main() -> int:
         retry_backoff_seconds=args.ollama_retry_backoff,
     )
 
-    extracted_pairs, skipped, loaded_count = extract_pairs(
+    extracted_pairs, skipped, loaded_count = extract_ticket_pairs(
         tickets=tickets,
-        ollama=ollama,
+        extractor=ollama,
         min_confidence=args.min_confidence,
         require_closed=args.require_closed,
         sleep_seconds=args.sleep_seconds,
@@ -996,5 +999,6 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
 
 

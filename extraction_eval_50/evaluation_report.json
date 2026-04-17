@@ -1,0 +1,883 @@
+{
+  "dataset": {
+    "total_tickets": 50,
+    "eligible_tickets": 43,
+    "extracted_tickets": 42,
+    "evaluation_scope": "resolved_only"
+  },
+  "extraction_metrics": {
+    "true_positives": 42,
+    "false_positives": 0,
+    "false_negatives": 1,
+    "true_negatives": 7,
+    "precision": 1.0,
+    "recall": 0.9767,
+    "f1": 0.9882
+  },
+  "category_metrics": {
+    "evaluated_predictions": 42,
+    "correct_predictions": 39,
+    "accuracy": 0.9286
+  },
+  "family_metrics": {
+    "evaluated_predictions": 42,
+    "correct_predictions": 40,
+    "accuracy": 0.9524
+  },
+  "text_similarity_metrics": {
+    "issue": {
+      "avg_token_f1": 0.3562,
+      "avg_sequence_similarity": 0.4372,
+      "avg_embedding_similarity": 0.6239
+    },
+    "resolution": {
+      "avg_token_f1": 0.2629,
+      "avg_sequence_similarity": 0.412,
+      "avg_embedding_similarity": 0.6737
+    }
+  },
+  "confidence_metrics": {
+    "avg_confidence": 0.9,
+    "count": 42
+  },
+  "category_distributions": {
+    "ground_truth_categories": {
+      "account_locked": 2,
+      "api_failure": 3,
+      "application_crash": 1,
+      "browser_issue": 2,
+      "data_recovery": 3,
+      "disk_space_full": 2,
+      "email_issue": 3,
+      "internet_access": 2,
+      "mfa_issue": 6,
+      "onboarding_offboarding": 4,
+      "password_reset": 2,
+      "peripheral_issue": 1,
+      "phishing_report": 2,
+      "printer_issue": 3,
+      "server_unavailable": 1,
+      "software_install": 2,
+      "vpn_issue": 1,
+      "wifi_connectivity": 1,
+      "workstation_failure": 1
+    },
+    "predicted_categories": {
+      "account_locked": 2,
+      "api_failure": 3,
+      "application_crash": 1,
+      "browser_issue": 2,
+      "data_recovery": 2,
+      "disk_space_full": 2,
+      "email_issue": 3,
+      "internet_access": 2,
+      "mfa_issue": 6,
+      "onboarding_offboarding": 4,
+      "password_reset": 2,
+      "peripheral_issue": 1,
+      "permission_issue": 2,
+      "phishing_report": 2,
+      "printer_issue": 3,
+      "server_unavailable": 1,
+      "shared_drive_issue": 1,
+      "vpn_issue": 1,
+      "wifi_connectivity": 1,
+      "workstation_failure": 1
+    },
+    "ground_truth_families": {
+      "Backend": 4,
+      "Hardware": 5,
+      "IAM": 14,
+      "Networking": 4,
+      "Security": 2,
+      "Software": 8,
+      "Storage": 5
+    },
+    "predicted_families": {
+      "Backend": 4,
+      "Hardware": 5,
+      "IAM": 16,
+      "Networking": 4,
+      "Security": 2,
+      "Software": 6,
+      "Storage": 5
+    }
+  },
+  "confusion_matrix": {
+    "fine_grained": {
+      "account_locked": {
+        "account_locked": 2
+      },
+      "api_failure": {
+        "api_failure": 3
+      },
+      "application_crash": {
+        "application_crash": 1
+      },
+      "browser_issue": {
+        "browser_issue": 2
+      },
+      "data_recovery": {
+        "data_recovery": 2,
+        "shared_drive_issue": 1
+      },
+      "disk_space_full": {
+        "disk_space_full": 2
+      },
+      "email_issue": {
+        "email_issue": 3
+      },
+      "internet_access": {
+        "internet_access": 2
+      },
+      "mfa_issue": {
+        "mfa_issue": 6
+      },
+      "onboarding_offboarding": {
+        "onboarding_offboarding": 4
+      },
+      "password_reset": {
+        "password_reset": 2
+      },
+      "peripheral_issue": {
+        "peripheral_issue": 1
+      },
+      "phishing_report": {
+        "phishing_report": 2
+      },
+      "printer_issue": {
+        "printer_issue": 3
+      },
+      "server_unavailable": {
+        "server_unavailable": 1
+      },
+      "software_install": {
+        "permission_issue": 2
+      },
+      "vpn_issue": {
+        "vpn_issue": 1
+      },
+      "wifi_connectivity": {
+        "wifi_connectivity": 1
+      },
+      "workstation_failure": {
+        "workstation_failure": 1
+      }
+    },
+    "family_level": {
+      "Backend": {
+        "Backend": 4
+      },
+      "Hardware": {
+        "Hardware": 5
+      },
+      "IAM": {
+        "IAM": 14
+      },
+      "Networking": {
+        "Networking": 4
+      },
+      "Security": {
+        "Security": 2
+      },
+      "Software": {
+        "IAM": 2,
+        "Software": 6
+      },
+      "Storage": {
+        "Storage": 5
+      }
+    }
+  },
+  "skipped_reason_counts": {
+    "ground_truth resolution_state is not resolved: partial": 1,
+    "ground_truth resolution_state is not resolved: unresolved": 6,
+    "model marked ticket unusable": 1
+  },
+  "examples": {
+    "category_errors": [
+      {
+        "ticket_id": "TDX-10001",
+        "title": "Software install request failed",
+        "ground_truth_issue_titles": [
+          "Software install request failed"
+        ],
+        "best_matching_ground_truth_title": "Software install request failed",
+        "predicted_issue_text": "Installer says no permission for approved software request.",
+        "issue_token_f1": 0.3333,
+        "issue_sequence_similarity": 0.3556,
+        "issue_embedding_similarity": 0.7438,
+        "ground_truth_resolution_summary": "The software install failed because the package deployment scope did not include the device. Correcting the deployment restored installation. The user expressed urgency during the conversation.",
+        "predicted_resolution_summary": "Cause: Application not targeted correctly. Fix: Assigned package properly, installation finished without errors.",
+        "resolution_token_f1": 0.1538,
+        "resolution_sequence_similarity": 0.3279,
+        "resolution_embedding_similarity": 0.5213,
+        "ground_truth_resolution_state": "resolved",
+        "ground_truth_primary_issue_category": "software_install",
+        "predicted_issue_category": "permission_issue",
+        "category_match": false,
+        "ground_truth_category_family": "Software",
+        "predicted_category_family": "IAM",
+        "family_match": false,
+        "confidence": 0.9,
+        "query": "Installer says no permission for approved software request.",
+        "positive": "Cause: Application not targeted correctly. Fix: Assigned package properly, installation finished without errors."
+      },
+      {
+        "ticket_id": "TDX-10008",
+        "title": "Data restore request",
+        "ground_truth_issue_titles": [
+          "Data restore request"
+        ],
+        "best_matching_ground_truth_title": "Data restore request",
+        "predicted_issue_text": "Previous version of shared document needed restoration.",
+        "issue_token_f1": 0.0,
+        "issue_sequence_similarity": 0.2667,
+        "issue_embedding_similarity": 0.4162,
+        "ground_truth_resolution_summary": "The requested data was recoverable from backup or snapshot history. Restoring the prior version returned the missing file.",
+        "predicted_resolution_summary": "Cause: Backup snapshots not used. Fix: Recovered copy from backup and placed back in shared folder.",
+        "resolution_token_f1": 0.1176,
+        "resolution_sequence_similarity": 0.3891,
+        "resolution_embedding_similarity": 0.4731,
+        "ground_truth_resolution_state": "resolved",
+        "ground_truth_primary_issue_category": "data_recovery",
+        "predicted_issue_category": "shared_drive_issue",
+        "category_match": false,
+        "ground_truth_category_family": "Storage",
+        "predicted_category_family": "Storage",
+        "family_match": true,
+        "confidence": 0.85,
+        "query": "Previous version of shared document needed restoration.",
+        "positive": "Cause: Backup snapshots not used. Fix: Recovered copy from backup and placed back in shared folder."
+      },
+      {
+        "ticket_id": "TDX-10040",
+        "title": "Software install request failed",
+        "ground_truth_issue_titles": [
+          "Software install request failed"
+        ],
+        "best_matching_ground_truth_title": "Software install request failed",
+        "predicted_issue_text": "Installer says no permission for software request.",
+        "issue_token_f1": 0.3636,
+        "issue_sequence_similarity": 0.3951,
+        "issue_embedding_similarity": 0.8087,
+        "ground_truth_resolution_summary": "The software install failed because the package deployment scope did not include the device. Correcting the deployment restored installation. The user expressed urgency during the conversation.",
+        "predicted_resolution_summary": "Cause: Application not targeted correctly. Fix: Assigned package properly, installation finished without errors.",
+        "resolution_token_f1": 0.1538,
+        "resolution_sequence_similarity": 0.3279,
+        "resolution_embedding_similarity": 0.5213,
+        "ground_truth_resolution_state": "resolved",
+        "ground_truth_primary_issue_category": "software_install",
+        "predicted_issue_category": "permission_issue",
+        "category_match": false,
+        "ground_truth_category_family": "Software",
+        "predicted_category_family": "IAM",
+        "family_match": false,
+        "confidence": 0.9,
+        "query": "Installer says no permission for software request.",
+        "positive": "Cause: Application not targeted correctly. Fix: Assigned package properly, installation finished without errors."
+      }
+    ],
+    "family_errors": [
+      {
+        "ticket_id": "TDX-10001",
+        "title": "Software install request failed",
+        "ground_truth_issue_titles": [
+          "Software install request failed"
+        ],
+        "best_matching_ground_truth_title": "Software install request failed",
+        "predicted_issue_text": "Installer says no permission for approved software request.",
+        "issue_token_f1": 0.3333,
+        "issue_sequence_similarity": 0.3556,
+        "issue_embedding_similarity": 0.7438,
+        "ground_truth_resolution_summary": "The software install failed because the package deployment scope did not include the device. Correcting the deployment restored installation. The user expressed urgency during the conversation.",
+        "predicted_resolution_summary": "Cause: Application not targeted correctly. Fix: Assigned package properly, installation finished without errors.",
+        "resolution_token_f1": 0.1538,
+        "resolution_sequence_similarity": 0.3279,
+        "resolution_embedding_similarity": 0.5213,
+        "ground_truth_resolution_state": "resolved",
+        "ground_truth_primary_issue_category": "software_install",
+        "predicted_issue_category": "permission_issue",
+        "category_match": false,
+        "ground_truth_category_family": "Software",
+        "predicted_category_family": "IAM",
+        "family_match": false,
+        "confidence": 0.9,
+        "query": "Installer says no permission for approved software request.",
+        "positive": "Cause: Application not targeted correctly. Fix: Assigned package properly, installation finished without errors."
+      },
+      {
+        "ticket_id": "TDX-10040",
+        "title": "Software install request failed",
+        "ground_truth_issue_titles": [
+          "Software install request failed"
+        ],
+        "best_matching_ground_truth_title": "Software install request failed",
+        "predicted_issue_text": "Installer says no permission for software request.",
+        "issue_token_f1": 0.3636,
+        "issue_sequence_similarity": 0.3951,
+        "issue_embedding_similarity": 0.8087,
+        "ground_truth_resolution_summary": "The software install failed because the package deployment scope did not include the device. Correcting the deployment restored installation. The user expressed urgency during the conversation.",
+        "predicted_resolution_summary": "Cause: Application not targeted correctly. Fix: Assigned package properly, installation finished without errors.",
+        "resolution_token_f1": 0.1538,
+        "resolution_sequence_similarity": 0.3279,
+        "resolution_embedding_similarity": 0.5213,
+        "ground_truth_resolution_state": "resolved",
+        "ground_truth_primary_issue_category": "software_install",
+        "predicted_issue_category": "permission_issue",
+        "category_match": false,
+        "ground_truth_category_family": "Software",
+        "predicted_category_family": "IAM",
+        "family_match": false,
+        "confidence": 0.9,
+        "query": "Installer says no permission for software request.",
+        "positive": "Cause: Application not targeted correctly. Fix: Assigned package properly, installation finished without errors."
+      }
+    ],
+    "worst_issue_matches": [
+      {
+        "ticket_id": "TDX-10026",
+        "title": "Offboarding request follow-up",
+        "ground_truth_issue_titles": [
+          "Offboarding request follow-up"
+        ],
+        "best_matching_ground_truth_title": "Offboarding request follow-up",
+        "predicted_issue_text": "New hire missing email, VPN, and ERP app access.",
+        "issue_token_f1": 0.0,
+        "issue_sequence_similarity": 0.2078,
+        "issue_embedding_similarity": 0.0307,
+        "ground_truth_resolution_summary": "The onboarding workflow had not fully completed a downstream provisioning task. Re-running the workflow restored the missing access. A secondary issue related to phishing_report was also reported.",
+        "predicted_resolution_summary": "Cause: Identity workflow did not finish pushing all entitlements. Fix: Reran provisioning task.",
+        "resolution_token_f1": 0.1905,
+        "resolution_sequence_similarity": 0.3368,
+        "resolution_embedding_similarity": 0.5102,
+        "ground_truth_resolution_state": "resolved",
+        "ground_truth_primary_issue_category": "onboarding_offboarding",
+        "predicted_issue_category": "onboarding_offboarding",
+        "category_match": true,
+        "ground_truth_category_family": "IAM",
+        "predicted_category_family": "IAM",
+        "family_match": true,
+        "confidence": 0.9,
+        "query": "New hire missing email, VPN, and ERP app access.",
+        "positive": "Cause: Identity workflow did not finish pushing all entitlements. Fix: Reran provisioning task."
+      },
+      {
+        "ticket_id": "TDX-10044",
+        "title": "Remote access issue",
+        "ground_truth_issue_titles": [
+          "Remote access issue"
+        ],
+        "best_matching_ground_truth_title": "Remote access issue",
+        "predicted_issue_text": "VPN connection fails after authentication",
+        "issue_token_f1": 0.0,
+        "issue_sequence_similarity": 0.2,
+        "issue_embedding_similarity": 0.3214,
+        "ground_truth_resolution_summary": "The VPN client was using an outdated or expired profile. Updating the VPN configuration restored remote access.",
+        "predicted_resolution_summary": "Cause: Outdated VPN client profile. Fix: Updated the profile and reconnected.",
+        "resolution_token_f1": 0.3571,
+        "resolution_sequence_similarity": 0.4787,
+        "resolution_embedding_similarity": 0.8279,
+        "ground_truth_resolution_state": "resolved",
+        "ground_truth_primary_issue_category": "vpn_issue",
+        "predicted_issue_category": "vpn_issue",
+        "category_match": true,
+        "ground_truth_category_family": "Networking",
+        "predicted_category_family": "Networking",
+        "family_match": true,
+        "confidence": 0.9,
+        "query": "VPN connection fails after authentication",
+        "positive": "Cause: Outdated VPN client profile. Fix: Updated the profile and reconnected."
+      },
+      {
+        "ticket_id": "TDX-10046",
+        "title": "Service-to-service API error",
+        "ground_truth_issue_titles": [
+          "Service-to-service API error"
+        ],
+        "best_matching_ground_truth_title": "Service-to-service API error",
+        "predicted_issue_text": "API response format changed, breaking downstream parser.",
+        "issue_token_f1": 0.1667,
+        "issue_sequence_similarity": 0.1667,
+        "issue_embedding_similarity": 0.3455,
+        "ground_truth_resolution_summary": "The API failure was caused by an upstream contract change that the client service was not prepared for. Updating the client handling restored the integration.",
+        "predicted_resolution_summary": "Cause: API response payload change from upstream broke downstream parser. Fix: Update downstream service to match upstream response format.",
+        "resolution_token_f1": 0.1818,
+        "resolution_sequence_similarity": 0.3502,
+        "resolution_embedding_similarity": 0.6287,
+        "ground_truth_resolution_state": "resolved",
+        "ground_truth_primary_issue_category": "api_failure",
+        "predicted_issue_category": "api_failure",
+        "category_match": true,
+        "ground_truth_category_family": "Backend",
+        "predicted_category_family": "Backend",
+        "family_match": true,
+        "confidence": 0.9,
+        "query": "API response format changed, breaking downstream parser.",
+        "positive": "Cause: API response payload change from upstream broke downstream parser. Fix: Update downstream service to match upstream response format."
+      },
+      {
+        "ticket_id": "TDX-10035",
+        "title": "New hire access missing",
+        "ground_truth_issue_titles": [
+          "New hire access missing"
+        ],
+        "best_matching_ground_truth_title": "New hire access missing",
+        "predicted_issue_text": "onboarding request incomplete",
+        "issue_token_f1": 0.0,
+        "issue_sequence_similarity": 0.1923,
+        "issue_embedding_similarity": 0.347,
+        "ground_truth_resolution_summary": "Provisioning was incomplete because one automated entitlement step had stalled. Restarting that task completed the user setup.",
+        "predicted_resolution_summary": "Cause: provisioning task queued. Fix: re-ran provisioning task.",
+        "resolution_token_f1": 0.1538,
+        "resolution_sequence_similarity": 0.2646,
+        "resolution_embedding_similarity": 0.6448,
+        "ground_truth_resolution_state": "resolved",
+        "ground_truth_primary_issue_category": "onboarding_offboarding",
+        "predicted_issue_category": "onboarding_offboarding",
+        "category_match": true,
+        "ground_truth_category_family": "IAM",
+        "predicted_category_family": "IAM",
+        "family_match": true,
+        "confidence": 0.9,
+        "query": "onboarding request incomplete",
+        "positive": "Cause: provisioning task queued. Fix: re-ran provisioning task."
+      },
+      {
+        "ticket_id": "TDX-10033",
+        "title": "Peripheral issue",
+        "ground_truth_issue_titles": [
+          "Peripheral issue"
+        ],
+        "best_matching_ground_truth_title": "Peripheral issue",
+        "predicted_issue_text": "Keyboard and mouse keep disconnecting from the dock.",
+        "issue_token_f1": 0.0,
+        "issue_sequence_similarity": 0.1765,
+        "issue_embedding_similarity": 0.4102,
+        "ground_truth_resolution_summary": "Monitor and USB drops were traced to stale dock firmware. Refreshing the firmware restored stable peripheral connections.",
+        "predicted_resolution_summary": "Cause: Outdated docking station firmware. Fix: Updated docking station firmware, peripherals stayed connected.",
+        "resolution_token_f1": 0.1333,
+        "resolution_sequence_similarity": 0.5281,
+        "resolution_embedding_similarity": 0.7267,
+        "ground_truth_resolution_state": "resolved",
+        "ground_truth_primary_issue_category": "peripheral_issue",
+        "predicted_issue_category": "peripheral_issue",
+        "category_match": true,
+        "ground_truth_category_family": "Hardware",
+        "predicted_category_family": "Hardware",
+        "family_match": true,
+        "confidence": 0.9,
+        "query": "Keyboard and mouse keep disconnecting from the dock.",
+        "positive": "Cause: Outdated docking station firmware. Fix: Updated docking station firmware, peripherals stayed connected."
+      },
+      {
+        "ticket_id": "TDX-10008",
+        "title": "Data restore request",
+        "ground_truth_issue_titles": [
+          "Data restore request"
+        ],
+        "best_matching_ground_truth_title": "Data restore request",
+        "predicted_issue_text": "Previous version of shared document needed restoration.",
+        "issue_token_f1": 0.0,
+        "issue_sequence_similarity": 0.2667,
+        "issue_embedding_similarity": 0.4162,
+        "ground_truth_resolution_summary": "The requested data was recoverable from backup or snapshot history. Restoring the prior version returned the missing file.",
+        "predicted_resolution_summary": "Cause: Backup snapshots not used. Fix: Recovered copy from backup and placed back in shared folder.",
+        "resolution_token_f1": 0.1176,
+        "resolution_sequence_similarity": 0.3891,
+        "resolution_embedding_similarity": 0.4731,
+        "ground_truth_resolution_state": "resolved",
+        "ground_truth_primary_issue_category": "data_recovery",
+        "predicted_issue_category": "shared_drive_issue",
+        "category_match": false,
+        "ground_truth_category_family": "Storage",
+        "predicted_category_family": "Storage",
+        "family_match": true,
+        "confidence": 0.85,
+        "query": "Previous version of shared document needed restoration.",
+        "positive": "Cause: Backup snapshots not used. Fix: Recovered copy from backup and placed back in shared folder."
+      },
+      {
+        "ticket_id": "TDX-10032",
+        "title": "Possible phishing message",
+        "ground_truth_issue_titles": [
+          "Possible phishing message"
+        ],
+        "best_matching_ground_truth_title": "Possible phishing message",
+        "predicted_issue_text": "Received a suspicious email about payroll or invoice review.",
+        "issue_token_f1": 0.0,
+        "issue_sequence_similarity": 0.1647,
+        "issue_embedding_similarity": 0.4477,
+        "ground_truth_resolution_summary": "Security review confirmed the message was malicious sender impersonation. The email was removed and similar messages were blocked.",
+        "predicted_resolution_summary": "Cause: Sender impersonation from outside the organization. Fix: Message confirmed as phishing and removed from mailboxes; no compromise steps required because user did not click link.",
+        "resolution_token_f1": 0.3182,
+        "resolution_sequence_similarity": 0.3578,
+        "resolution_embedding_similarity": 0.6066,
+        "ground_truth_resolution_state": "resolved",
+        "ground_truth_primary_issue_category": "phishing_report",
+        "predicted_issue_category": "phishing_report",
+        "category_match": true,
+        "ground_truth_category_family": "Security",
+        "predicted_category_family": "Security",
+        "family_match": true,
+        "confidence": 0.9,
+        "query": "Received a suspicious email about payroll or invoice review.",
+        "positive": "Cause: Sender impersonation from outside the organization. Fix: Message confirmed as phishing and removed from mailboxes; no compromise steps required because user did not click link."
+      },
+      {
+        "ticket_id": "TDX-10045",
+        "title": "Internet access blocked",
+        "ground_truth_issue_titles": [
+          "Internet access blocked"
+        ],
+        "best_matching_ground_truth_title": "Internet access blocked",
+        "predicted_issue_text": "Browser cannot connect to proxy server",
+        "issue_token_f1": 0.0,
+        "issue_sequence_similarity": 0.2623,
+        "issue_embedding_similarity": 0.4918,
+        "ground_truth_resolution_summary": "The browser issue was caused by stale proxy settings on the endpoint. Reapplying the correct network configuration resolved the problem.",
+        "predicted_resolution_summary": "Cause: Proxy settings misconfigured. Fix: Corrected proxy settings and external browsing works again.",
+        "resolution_token_f1": 0.1212,
+        "resolution_sequence_similarity": 0.3376,
+        "resolution_embedding_similarity": 0.758,
+        "ground_truth_resolution_state": "resolved",
+        "ground_truth_primary_issue_category": "internet_access",
+        "predicted_issue_category": "internet_access",
+        "category_match": true,
+        "ground_truth_category_family": "Networking",
+        "predicted_category_family": "Networking",
+        "family_match": true,
+        "confidence": 0.9,
+        "query": "Browser cannot connect to proxy server",
+        "positive": "Cause: Proxy settings misconfigured. Fix: Corrected proxy settings and external browsing works again."
+      },
+      {
+        "ticket_id": "TDX-10016",
+        "title": "Authenticator app issue",
+        "ground_truth_issue_titles": [
+          "Authenticator app issue"
+        ],
+        "best_matching_ground_truth_title": "Authenticator app issue",
+        "predicted_issue_text": "Two-factor login failing on phone app.",
+        "issue_token_f1": 0.2,
+        "issue_sequence_similarity": 0.2951,
+        "issue_embedding_similarity": 0.5099,
+        "ground_truth_resolution_summary": "Second-factor verification was failing because the enrolled authenticator had drifted out of sync. Resetting MFA resolved the issue.",
+        "predicted_resolution_summary": "Cause: Device token out of sync with identity platform. Fix: Reset MFA enrollment and re-register authenticator app.",
+        "resolution_token_f1": 0.2703,
+        "resolution_sequence_similarity": 0.2742,
+        "resolution_embedding_similarity": 0.8332,
+        "ground_truth_resolution_state": "resolved",
+        "ground_truth_primary_issue_category": "mfa_issue",
+        "predicted_issue_category": "mfa_issue",
+        "category_match": true,
+        "ground_truth_category_family": "IAM",
+        "predicted_category_family": "IAM",
+        "family_match": true,
+        "confidence": 0.9,
+        "query": "Two-factor login failing on phone app.",
+        "positive": "Cause: Device token out of sync with identity platform. Fix: Reset MFA enrollment and re-register authenticator app."
+      },
+      {
+        "ticket_id": "TDX-10030",
+        "title": "Cannot log in",
+        "ground_truth_issue_titles": [
+          "Cannot log in"
+        ],
+        "best_matching_ground_truth_title": "Cannot log in",
+        "predicted_issue_text": "Account locked due to repeated failed sign-ins.",
+        "issue_token_f1": 0.0,
+        "issue_sequence_similarity": 0.3,
+        "issue_embedding_similarity": 0.5141,
+        "ground_truth_resolution_summary": "Authentication logs showed a lockout state. The account was unlocked and sign-in access was restored. The user expressed urgency during the conversation.",
+        "predicted_resolution_summary": "Cause: Repeated failed sign-ins. Fix: Account unlocked by IT support.",
+        "resolution_token_f1": 0.1765,
+        "resolution_sequence_similarity": 0.3153,
+        "resolution_embedding_similarity": 0.6268,
+        "ground_truth_resolution_state": "resolved",
+        "ground_truth_primary_issue_category": "account_locked",
+        "predicted_issue_category": "account_locked",
+        "category_match": true,
+        "ground_truth_category_family": "IAM",
+        "predicted_category_family": "IAM",
+        "family_match": true,
+        "confidence": 0.9,
+        "query": "Account locked due to repeated failed sign-ins.",
+        "positive": "Cause: Repeated failed sign-ins. Fix: Account unlocked by IT support."
+      }
+    ],
+    "worst_resolution_matches": [
+      {
+        "ticket_id": "TDX-10038",
+        "title": "Suspicious email reported",
+        "ground_truth_issue_titles": [
+          "Suspicious email reported"
+        ],
+        "best_matching_ground_truth_title": "Suspicious email reported",
+        "predicted_issue_text": "Reported suspicious email asking for credentials.",
+        "issue_token_f1": 0.6667,
+        "issue_sequence_similarity": 0.5676,
+        "issue_embedding_similarity": 0.7854,
+        "ground_truth_resolution_summary": "The reported email was phishing and was quarantined. Because the user did not click or submit credentials, the account did not require recovery steps.",
+        "predicted_resolution_summary": "Cause: Sender impersonation from outside. Fix: Quarantined message and blocked similar patterns.",
+        "resolution_token_f1": 0.1111,
+        "resolution_sequence_similarity": 0.3171,
+        "resolution_embedding_similarity": 0.3759,
+        "ground_truth_resolution_state": "resolved",
+        "ground_truth_primary_issue_category": "phishing_report",
+        "predicted_issue_category": "phishing_report",
+        "category_match": true,
+        "ground_truth_category_family": "Security",
+        "predicted_category_family": "Security",
+        "family_match": true,
+        "confidence": 0.9,
+        "query": "Reported suspicious email asking for credentials.",
+        "positive": "Cause: Sender impersonation from outside. Fix: Quarantined message and blocked similar patterns."
+      },
+      {
+        "ticket_id": "TDX-10020",
+        "title": "Outlook keeps asking for password",
+        "ground_truth_issue_titles": [
+          "Outlook keeps asking for password"
+        ],
+        "best_matching_ground_truth_title": "Outlook keeps asking for password",
+        "predicted_issue_text": "Outlook desktop client keeps prompting for password",
+        "issue_token_f1": 0.6667,
+        "issue_sequence_similarity": 0.7143,
+        "issue_embedding_similarity": 0.8653,
+        "ground_truth_resolution_summary": "The issue came from an outdated Outlook credential cache. After clearing cached credentials and re-adding the account, email access returned.",
+        "predicted_resolution_summary": "Cause: Cached credentials issue. Fix: Clear cached credentials and sign in again.",
+        "resolution_token_f1": 0.2424,
+        "resolution_sequence_similarity": 0.5495,
+        "resolution_embedding_similarity": 0.3874,
+        "ground_truth_resolution_state": "resolved",
+        "ground_truth_primary_issue_category": "email_issue",
+        "predicted_issue_category": "email_issue",
+        "category_match": true,
+        "ground_truth_category_family": "Software",
+        "predicted_category_family": "Software",
+        "family_match": true,
+        "confidence": 0.9,
+        "query": "Outlook desktop client keeps prompting for password",
+        "positive": "Cause: Cached credentials issue. Fix: Clear cached credentials and sign in again."
+      },
+      {
+        "ticket_id": "TDX-10027",
+        "title": "Mailbox not loading",
+        "ground_truth_issue_titles": [
+          "Mailbox not loading"
+        ],
+        "best_matching_ground_truth_title": "Mailbox not loading",
+        "predicted_issue_text": "Outlook desktop client not loading mailbox",
+        "issue_token_f1": 0.6667,
+        "issue_sequence_similarity": 0.4262,
+        "issue_embedding_similarity": 0.7417,
+        "ground_truth_resolution_summary": "The issue came from an outdated Outlook credential cache. After clearing cached credentials and re-adding the account, email access returned.",
+        "predicted_resolution_summary": "Cause: Cached credentials issue. Fix: Clear cached credentials and sign in again.",
+        "resolution_token_f1": 0.2424,
+        "resolution_sequence_similarity": 0.5495,
+        "resolution_embedding_similarity": 0.3874,
+        "ground_truth_resolution_state": "resolved",
+        "ground_truth_primary_issue_category": "email_issue",
+        "predicted_issue_category": "email_issue",
+        "category_match": true,
+        "ground_truth_category_family": "Software",
+        "predicted_category_family": "Software",
+        "family_match": true,
+        "confidence": 0.9,
+        "query": "Outlook desktop client not loading mailbox",
+        "positive": "Cause: Cached credentials issue. Fix: Clear cached credentials and sign in again."
+      },
+      {
+        "ticket_id": "TDX-10008",
+        "title": "Data restore request",
+        "ground_truth_issue_titles": [
+          "Data restore request"
+        ],
+        "best_matching_ground_truth_title": "Data restore request",
+        "predicted_issue_text": "Previous version of shared document needed restoration.",
+        "issue_token_f1": 0.0,
+        "issue_sequence_similarity": 0.2667,
+        "issue_embedding_similarity": 0.4162,
+        "ground_truth_resolution_summary": "The requested data was recoverable from backup or snapshot history. Restoring the prior version returned the missing file.",
+        "predicted_resolution_summary": "Cause: Backup snapshots not used. Fix: Recovered copy from backup and placed back in shared folder.",
+        "resolution_token_f1": 0.1176,
+        "resolution_sequence_similarity": 0.3891,
+        "resolution_embedding_similarity": 0.4731,
+        "ground_truth_resolution_state": "resolved",
+        "ground_truth_primary_issue_category": "data_recovery",
+        "predicted_issue_category": "shared_drive_issue",
+        "category_match": false,
+        "ground_truth_category_family": "Storage",
+        "predicted_category_family": "Storage",
+        "family_match": true,
+        "confidence": 0.85,
+        "query": "Previous version of shared document needed restoration.",
+        "positive": "Cause: Backup snapshots not used. Fix: Recovered copy from backup and placed back in shared folder."
+      },
+      {
+        "ticket_id": "TDX-10014",
+        "title": "Recover previous file version",
+        "ground_truth_issue_titles": [
+          "Recover previous file version"
+        ],
+        "best_matching_ground_truth_title": "Recover previous file version",
+        "predicted_issue_text": "Recover deleted file from backup",
+        "issue_token_f1": 0.4444,
+        "issue_sequence_similarity": 0.5574,
+        "issue_embedding_similarity": 0.6543,
+        "ground_truth_resolution_summary": "A previous file version was available in backup retention. Recovering that copy restored the needed data. The user expressed urgency during the conversation.",
+        "predicted_resolution_summary": "Cause: File deleted. Fix: Recovered copy from backup and placed back in shared folder.",
+        "resolution_token_f1": 0.2162,
+        "resolution_sequence_similarity": 0.321,
+        "resolution_embedding_similarity": 0.483,
+        "ground_truth_resolution_state": "resolved",
+        "ground_truth_primary_issue_category": "data_recovery",
+        "predicted_issue_category": "data_recovery",
+        "category_match": true,
+        "ground_truth_category_family": "Storage",
+        "predicted_category_family": "Storage",
+        "family_match": true,
+        "confidence": 0.9,
+        "query": "Recover deleted file from backup",
+        "positive": "Cause: File deleted. Fix: Recovered copy from backup and placed back in shared folder."
+      },
+      {
+        "ticket_id": "TDX-10007",
+        "title": "Recover previous file version",
+        "ground_truth_issue_titles": [
+          "Recover previous file version"
+        ],
+        "best_matching_ground_truth_title": "Recover previous file version",
+        "predicted_issue_text": "Recover deleted file from backup",
+        "issue_token_f1": 0.4444,
+        "issue_sequence_similarity": 0.5574,
+        "issue_embedding_similarity": 0.6543,
+        "ground_truth_resolution_summary": "A previous file version was available in backup retention. Recovering that copy restored the needed data. The user expressed urgency during the conversation.",
+        "predicted_resolution_summary": "Cause: File deleted and not recoverable via normal recycle bin. Fix: Restored from prior snapshot and placed back in shared folder.",
+        "resolution_token_f1": 0.1364,
+        "resolution_sequence_similarity": 0.3819,
+        "resolution_embedding_similarity": 0.5043,
+        "ground_truth_resolution_state": "resolved",
+        "ground_truth_primary_issue_category": "data_recovery",
+        "predicted_issue_category": "data_recovery",
+        "category_match": true,
+        "ground_truth_category_family": "Storage",
+        "predicted_category_family": "Storage",
+        "family_match": true,
+        "confidence": 0.9,
+        "query": "Recover deleted file from backup",
+        "positive": "Cause: File deleted and not recoverable via normal recycle bin. Fix: Restored from prior snapshot and placed back in shared folder."
+      },
+      {
+        "ticket_id": "TDX-10026",
+        "title": "Offboarding request follow-up",
+        "ground_truth_issue_titles": [
+          "Offboarding request follow-up"
+        ],
+        "best_matching_ground_truth_title": "Offboarding request follow-up",
+        "predicted_issue_text": "New hire missing email, VPN, and ERP app access.",
+        "issue_token_f1": 0.0,
+        "issue_sequence_similarity": 0.2078,
+        "issue_embedding_similarity": 0.0307,
+        "ground_truth_resolution_summary": "The onboarding workflow had not fully completed a downstream provisioning task. Re-running the workflow restored the missing access. A secondary issue related to phishing_report was also reported.",
+        "predicted_resolution_summary": "Cause: Identity workflow did not finish pushing all entitlements. Fix: Reran provisioning task.",
+        "resolution_token_f1": 0.1905,
+        "resolution_sequence_similarity": 0.3368,
+        "resolution_embedding_similarity": 0.5102,
+        "ground_truth_resolution_state": "resolved",
+        "ground_truth_primary_issue_category": "onboarding_offboarding",
+        "predicted_issue_category": "onboarding_offboarding",
+        "category_match": true,
+        "ground_truth_category_family": "IAM",
+        "predicted_category_family": "IAM",
+        "family_match": true,
+        "confidence": 0.9,
+        "query": "New hire missing email, VPN, and ERP app access.",
+        "positive": "Cause: Identity workflow did not finish pushing all entitlements. Fix: Reran provisioning task."
+      },
+      {
+        "ticket_id": "TDX-10022",
+        "title": "Workstation keeps rebooting",
+        "ground_truth_issue_titles": [
+          "Workstation keeps rebooting"
+        ],
+        "best_matching_ground_truth_title": "Workstation keeps rebooting",
+        "predicted_issue_text": "Workstation reboots with blue screen before sign-in.",
+        "issue_token_f1": 0.1818,
+        "issue_sequence_similarity": 0.5063,
+        "issue_embedding_similarity": 0.6502,
+        "ground_truth_resolution_summary": "System instability came from a recent driver package on the endpoint. Reverting that driver resolved the blue-screen failures.",
+        "predicted_resolution_summary": "Cause: Faulty driver update. Fix: Removed bad driver and applied approved version.",
+        "resolution_token_f1": 0.129,
+        "resolution_sequence_similarity": 0.4135,
+        "resolution_embedding_similarity": 0.5176,
+        "ground_truth_resolution_state": "resolved",
+        "ground_truth_primary_issue_category": "workstation_failure",
+        "predicted_issue_category": "workstation_failure",
+        "category_match": true,
+        "ground_truth_category_family": "Hardware",
+        "predicted_category_family": "Hardware",
+        "family_match": true,
+        "confidence": 0.9,
+        "query": "Workstation reboots with blue screen before sign-in.",
+        "positive": "Cause: Faulty driver update. Fix: Removed bad driver and applied approved version."
+      },
+      {
+        "ticket_id": "TDX-10001",
+        "title": "Software install request failed",
+        "ground_truth_issue_titles": [
+          "Software install request failed"
+        ],
+        "best_matching_ground_truth_title": "Software install request failed",
+        "predicted_issue_text": "Installer says no permission for approved software request.",
+        "issue_token_f1": 0.3333,
+        "issue_sequence_similarity": 0.3556,
+        "issue_embedding_similarity": 0.7438,
+        "ground_truth_resolution_summary": "The software install failed because the package deployment scope did not include the device. Correcting the deployment restored installation. The user expressed urgency during the conversation.",
+        "predicted_resolution_summary": "Cause: Application not targeted correctly. Fix: Assigned package properly, installation finished without errors.",
+        "resolution_token_f1": 0.1538,
+        "resolution_sequence_similarity": 0.3279,
+        "resolution_embedding_similarity": 0.5213,
+        "ground_truth_resolution_state": "resolved",
+        "ground_truth_primary_issue_category": "software_install",
+        "predicted_issue_category": "permission_issue",
+        "category_match": false,
+        "ground_truth_category_family": "Software",
+        "predicted_category_family": "IAM",
+        "family_match": false,
+        "confidence": 0.9,
+        "query": "Installer says no permission for approved software request.",
+        "positive": "Cause: Application not targeted correctly. Fix: Assigned package properly, installation finished without errors."
+      },
+      {
+        "ticket_id": "TDX-10040",
+        "title": "Software install request failed",
+        "ground_truth_issue_titles": [
+          "Software install request failed"
+        ],
+        "best_matching_ground_truth_title": "Software install request failed",
+        "predicted_issue_text": "Installer says no permission for software request.",
+        "issue_token_f1": 0.3636,
+        "issue_sequence_similarity": 0.3951,
+        "issue_embedding_similarity": 0.8087,
+        "ground_truth_resolution_summary": "The software install failed because the package deployment scope did not include the device. Correcting the deployment restored installation. The user expressed urgency during the conversation.",
+        "predicted_resolution_summary": "Cause: Application not targeted correctly. Fix: Assigned package properly, installation finished without errors.",
+        "resolution_token_f1": 0.1538,
+        "resolution_sequence_similarity": 0.3279,
+        "resolution_embedding_similarity": 0.5213,
+        "ground_truth_resolution_state": "resolved",
+        "ground_truth_primary_issue_category": "software_install",
+        "predicted_issue_category": "permission_issue",
+        "category_match": false,
+        "ground_truth_category_family": "Software",
+        "predicted_category_family": "IAM",
+        "family_match": false,
+        "confidence": 0.9,
+        "query": "Installer says no permission for software request.",
+        "positive": "Cause: Application not targeted correctly. Fix: Assigned package properly, installation finished without errors."
+      }
+    ]
+  },
+  "per_ticket_results_count": 42
+}

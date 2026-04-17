@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Answer new ticket JSON/JSONL by retrieving similar resolved tickets.
 
@@ -25,11 +25,16 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List, Sequence
 
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 import numpy as np
 import requests
 from sentence_transformers import SentenceTransformer
 
-from tdx_ollama_pair_builder import Ticket, build_thread_text, clean_training_text, load_tickets
+from extraction.extract_ticket_pairs import Ticket, clean_message_text as clean_training_text, load_tickets
+from ticket_memory.extraction.thread_render import build_thread_text
 
 
 DEFAULT_TOP_K = 3
@@ -291,3 +296,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

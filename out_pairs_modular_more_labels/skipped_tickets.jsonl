@@ -1,0 +1,8 @@
+{"ticket_id": "TDX-10003", "reason": "ground_truth resolution_state is not resolved: partial"}
+{"ticket_id": "TDX-10017", "reason": "ground_truth resolution_state is not resolved: unresolved"}
+{"ticket_id": "TDX-10018", "reason": "ground_truth resolution_state is not resolved: unresolved"}
+{"ticket_id": "TDX-10024", "reason": "ground_truth resolution_state is not resolved: unresolved"}
+{"ticket_id": "TDX-10025", "reason": "ground_truth resolution_state is not resolved: unresolved"}
+{"ticket_id": "TDX-10037", "reason": "ground_truth resolution_state is not resolved: unresolved"}
+{"ticket_id": "TDX-10049", "reason": "model marked ticket unusable", "ollama_output": {"should_use": false, "issue_summary": "User received a suspicious email.", "resolution_summary": "Cause: Email matched known phishing pattern. Fix: Message was removed from mailboxes.", "issue_category": "phishing_report", "confidence": 0.85, "reasoning_short": "The thread discusses a suspicious email and confirms it as phishing, which is then removed.", "used_message_indexes": [3, 4]}, "ground_truth_primary_issue_category": "phishing_report", "ground_truth_secondary_issue_category": null, "ground_truth_resolution_state": "resolved"}
+{"ticket_id": "TDX-10050", "reason": "ground_truth resolution_state is not resolved: unresolved"}

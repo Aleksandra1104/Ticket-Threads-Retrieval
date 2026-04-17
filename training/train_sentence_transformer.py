@@ -42,7 +42,7 @@ from pathlib import Path
 from typing import List, Sequence, Tuple, TypeVar
 
 from sentence_transformers import InputExample, SentenceTransformer, losses
-from sentence_transformers.evaluation import EmbeddingSimilarityEvaluator, TripletEvaluator
+from sentence_transformers.evaluation import BinaryClassificationEvaluator, TripletEvaluator
 from torch.utils.data import DataLoader
 
 
@@ -99,19 +99,18 @@ def ensure_output_dir(path: Path) -> None:
 
 
 def split_examples(items: Sequence[T], validation_split: float, rng: random.Random) -> Tuple[List[T], List[T]]:
+    if validation_split < 0 or validation_split >= 1:
+        raise ValueError(f"--validation-split must be in range [0, 1), got {validation_split}")
+    
     shuffled = list(items)
     rng.shuffle(shuffled)
 
-    if not shuffled or validation_split <= 0:
+    if not shuffled or validation_split == 0:
         return shuffled, []
 
     validation_count = int(len(shuffled) * validation_split)
-    if validation_count == 0 and len(shuffled) > 1:
-        validation_count = 1
-    if validation_count >= len(shuffled):
-        validation_count = len(shuffled) - 1
 
-    if validation_count <= 0:
+    if validation_count == 0:
         return shuffled, []
 
     validation = shuffled[:validation_count]
@@ -164,11 +163,25 @@ def load_triplet_examples(path: Path) -> List[InputExample]:
     return examples
 
 
-def build_pair_evaluator(examples: Sequence[InputExample], name: str) -> EmbeddingSimilarityEvaluator | None:
+# def build_pair_evaluator(examples: Sequence[InputExample], name: str) -> EmbeddingSimilarityEvaluator | None:
+#     if not examples:
+#         return None
+#     return EmbeddingSimilarityEvaluator.from_input_examples(list(examples), name=name)
+
+def build_pair_evaluator(examples: Sequence[InputExample], name: str) -> BinaryClassificationEvaluator | None:
     if not examples:
         return None
-    return EmbeddingSimilarityEvaluator.from_input_examples(list(examples), name=name)
 
+    sentences1 = [e.texts[0] for e in examples]
+    sentences2 = [e.texts[1] for e in examples]
+    labels = [int(e.label) for e in examples]
+
+    return BinaryClassificationEvaluator(
+        sentences1=sentences1,
+        sentences2=sentences2,
+        labels=labels,
+        name=name,
+    )
 
 def build_triplet_evaluator(examples: Sequence[InputExample], name: str) -> TripletEvaluator | None:
     if not examples:

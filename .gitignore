@@ -5,6 +5,7 @@ __pycache__/
 *.pyd
 
 .vscode/
+support_sim/
 
 models/
 retrieval_index/

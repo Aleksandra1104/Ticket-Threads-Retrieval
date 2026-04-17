@@ -1,199 +1,282 @@
-# Ticket Threads Retrieval
+﻿# Ticket Threads Retrieval
 
-End-to-end **semantic retrieval pipeline for IT help desk ticket threads**.
+End-to-end semantic retrieval pipeline for IT help desk ticket threads.
 
-This project converts resolved TeamsDynamix-style support tickets into supervised training pairs, fine-tunes a `SentenceTransformer`, builds a normalized embedding index, and retrieves the most relevant historical resolutions for new incoming tickets.
+This repo now has two clear layers:
 
-The pipeline demonstrates how to bootstrap a practical retrieval system from ticket threads using:
+- reusable Python packages for simulation and extraction under `ticket_memory/`
+- runnable scripts grouped by task under `extraction/`, `training/`, `indexing/`, `retrieval/`, `evaluation/`, and `viewers/`
 
-* **synthetic supervision**
-* **hard negative sampling**
-* **embedding fine-tuning**
-* **retrieval evaluation (Recall@K + MRR)**
-* optional **grounded answer drafting with Ollama**
+The core question behind the project is still:
 
----
+> Can historical ticket threads be converted into reusable retrieval memory for future support incidents?
 
-## Key Results
+## Pipeline
 
-### Retrieval Performance
+The workflow is designed as a **modular simulation → extraction → retrieval → evaluation system**, where each stage can be improved independently.
 
-Evaluated on **104 unique ticket issues**:
+1. **Generate reusable synthetic ticket threads**  
+   Use the modular `support_sim/` simulator with reusable dataclasses, domain rules, configurable personas, and multi-step support flows (`direct_resolution`, escalation, partial resolution, mixed issues). Hidden structured ground truth is generated for later evaluation.
 
-* **Recall@1:** 0.6731
-* **Recall@2:** 0.9135
-* **Recall@3:** 0.9808
-* **Recall@4:** 1.0000
-* **Recall@5:** 1.0000
-* **MRR:** 0.8205
+2. **Extract issue-resolution pairs from raw ticket threads**  
+   Convert noisy multi-turn threads into structured retrieval memories using blind Ollama extraction plus strict JSON schema validation, category whitelists, confidence thresholds, deterministic post-validation rules, and skipped-ticket auditing.
 
-This shows the correct **resolution category is usually retrieved in the top few results**, with perfect recall by top-4.
+3. **Build supervised training pairs**  
+   Create positive issue → resolution pairs and optional hard negatives / triplets for dense retrieval training.
 
-### Embedding Validation
+4. **Fine-tune `SentenceTransformer`**  
+   Train embeddings so semantically similar support incidents cluster together even when phrased differently.
 
-Fine-tuned from `all-MiniLM-L6-v2`:
+5. **Build normalized retrieval index**  
+   Encode extracted issue memories into an L2-normalized dense vector store for fast cosine-similarity retrieval.
 
-* **Cosine Pearson:** 0.9532
-* **Cosine Spearman:** 0.8664
-* **Epochs:** 3
-* **Batch size:** 16
-* **Learning rate:** `2e-5`
+6. **Retrieve top historical fixes for new tickets**  
+   Match new issues against historical resolutions using top-k semantic nearest-neighbor retrieval.
 
-These results indicate strong semantic clustering of paraphrased ticket issues and realistic separation from hard negatives.
+7. **Evaluate extraction + retrieval quality**  
+   Validate both upstream data generation and downstream retrieval using:
+   - extraction precision / recall / F1
+   - category and family accuracy
+   - text similarity metrics
+   - confusion matrices
+   - `Recall@K`
+   - `MRR`
 
----
+8. **Review tickets and retrieval matches in Streamlit**  
+   Inspect simulated threads, extracted pairs, skipped tickets, retrieval scores, and failure cases interactively.
 
-## Baseline vs Fine-Tuned
+9. **Optionally draft grounded support responses with Ollama**  
+   Use retrieved historical fixes as grounding context for suggested agent replies and future RAG-style help desk workflows.
 
-| Model                     | Recall@1 | Recall@3 |    MRR |
-| ------------------------- | -------: | -------: | -----: |
-| `all-MiniLM-L6-v2`        |   0.6731 |   0.9712 | 0.8171 |
-| Fine-tuned `ticket-pairs` |   0.6731 |   0.9808 | 0.8205 |
 
-The pretrained MiniLM baseline was already strong on IT help desk phrasing, so fine-tuning produced **modest but consistent gains in Recall@2–5 and MRR** rather than dramatic top-1 jumps.
 
-### Why the gain wasn't bigger
+## Repo Layout
 
-The improvement was intentionally realistic and limited by three factors:
+```text
+ticket_memory/
+|-- simulation/
+|   |-- core/
+|   |-- domains/
+|   |-- exporters/
+|   `-- examples/
+`-- extraction/
+    |-- base.py
+    |-- models.py
+    |-- ollama_extractor.py
+    |-- pipeline.py
+    `-- thread_render.py
 
-* **Strong baseline model:** MiniLM already handles common IT paraphrases well (account lockouts, VPN access, shared drive permissions, printer issues)
-* **Small fine-tuning dataset:** only ~200 synthetic tickets were used, which is enough for domain nudging but not large embedding-space shifts
-* **Repetitive issue families:** many tickets share templated language, so the pretrained model already clusters them effectively
+extraction/
+`-- extract_ticket_pairs.py
 
-This was still a valuable ML finding:
+training/
+`-- train_sentence_transformer.py
 
-> the primary bottleneck shifted from embedding retrieval quality to the **richness of resolution knowledge units**
+indexing/
+`-- build_ticket_index.py
 
-In other words, the model usually retrieved the correct **resolution family**, but downstream usefulness is now more constrained by how detailed and actionable the stored fixes are.
+retrieval/
+`-- answer_new_tickets.py
 
----
+evaluation/
+|-- evaluate_extraction.py
+`-- evaluate_ticket_retrieval.py
 
-## Problem This Solves
+viewers/
+|-- streamlit_ticket_viewer.py
+`-- streamlit_retrieval_viewer.py
+```
 
-IT support systems often contain thousands of historical tickets, but finding the right prior resolution is difficult because:
+### `ticket_memory/simulation/`
 
-* users phrase the same issue differently
-* keyword search misses paraphrases
-* ticket closures are noisy
-* multiple valid fixes may exist for the same issue family
+The modular simulator package.
 
-This project solves that by learning embeddings that map:
+- `core/`: domain-agnostic models, engine, flows, personas, rendering helpers
+- `domains/it_support/`: IT issue catalog, artifacts, and rules
+- `exporters/`: raw thread and retrieval-pair exporters
+- `examples/generate_it_threads.py`: clean example generator entrypoint
 
-> **new issue phrasing → historical resolution family**
+The simulator supports:
 
-instead of relying on exact keyword overlap.
+- reusable dataclasses such as `Scenario`, `Message`, and `IssueVariant`
+- configurable flow types including direct resolution, escalation, partial resolution, failed first fix, and mixed issues
+- user personas such as vague, frustrated, technical, and cooperative
+- agent personas such as concise, methodical, and empathetic
+- optional secondary issues and resolution states
 
----
+### `ticket_memory/extraction/`
 
-## Pipeline Overview
+The modular extraction package.
 
-The full workflow:
+- `thread_render.py`: converts structured tickets into extraction-ready thread text
+- `ollama_extractor.py`: Ollama-backed thread-only extraction
+- `pipeline.py`: validation and extraction orchestration
+- `models.py` and `base.py`: extraction-side interfaces and dataclasses
 
-1. Generate or ingest TeamsDynamix-style ticket threads
-2. Extract issue-resolution pairs from resolved tickets with Ollama
-3. Create supervised positive + hard-negative pairs
-4. Fine-tune a `SentenceTransformer`
-5. Build normalized embedding retrieval index
-6. Retrieve top historical fixes for new tickets
-7. Optionally draft a grounded answer with Ollama
+This layer is designed to treat simulated threads like real help desk data, without relying on hidden simulator labels for the extracted pair itself.
 
----
+### Grouped script folders
 
-## Models & Tools
+These folders contain the runnable CLIs and review tools:
 
-### Embeddings
+- `extraction/`: build extracted pairs, train pairs, triplets, and skipped-ticket logs
+- `training/`: train sentence-transformer models
+- `indexing/`: build dense retrieval indexes
+- `retrieval/`: retrieve similar historical fixes and optionally draft grounded replies
+- `evaluation/`: measure extraction quality and retrieval quality
+- `viewers/`: Streamlit apps for human review
 
-* Base: `sentence-transformers/all-MiniLM-L6-v2`
-* Fine-tuned: `models/ticket-pairs`
+The repo root still keeps thin compatibility wrappers such as [extract_ticket_pairs.py](/C:/ticket_threads_retrieval/extract_ticket_pairs.py), [build_ticket_index.py](/C:/ticket_threads_retrieval/build_ticket_index.py), and [streamlit_ticket_viewer.py](/C:/ticket_threads_retrieval/streamlit_ticket_viewer.py) so older commands continue to work.
 
-### LLM Extraction / Drafting
+## IT Taxonomy
 
-* Local Ollama API
-* Example model: `qwen2.5:7b-instruct`
+The current IT support taxonomy includes:
 
-### Core Libraries
+- IAM: `account_locked`, `password_reset`, `mfa_issue`, `permission_issue`, `onboarding_offboarding`
+- Networking: `vpn_issue`, `wifi_connectivity`, `internet_access`, `voip_telephony`
+- Hardware: `workstation_failure`, `peripheral_issue`, `printer_issue`, `mobile_device_issue`
+- Software: `email_issue`, `software_install`, `application_crash`, `browser_issue`
+- Storage: `shared_drive_issue`, `data_recovery`, `disk_space_full`
+- Security: `phishing_report`, `malware_infection`, `encryption_issue`
+- Backend: `server_unavailable`, `database_connection`, `api_failure`
+- Fallback: `other`
 
-* `sentence-transformers`
-* `torch`
-* `numpy`
-* `requests`
+## Main Entry Points
 
----
+### Simulation
 
-## Main Scripts
+- [tdx_simulate_tickets.py](/C:/ticket_threads_retrieval/tdx_simulate_tickets.py): original single-file simulator
+- [ticket_memory/simulation/examples/generate_it_threads.py](/C:/ticket_threads_retrieval/ticket_memory/simulation/examples/generate_it_threads.py): modular simulator example
 
-* `tdx_simulate_tickets.py` → generate synthetic TeamsDynamix-style tickets
-* `tdx_ollama_pair_builder.py` → extract issue/resolution pairs
-* `train_sentence_transformer.py` → fine-tune embeddings
-* `build_ticket_index.py` → build normalized retrieval index
-* `answer_new_tickets.py` → retrieve similar resolutions and draft responses
-* `evaluate_ticket_retrieval.py` → compute Recall@K and MRR
-* `evaluate_extraction.py` → evaluate extraction precision / recall / F1
+### Extraction
 
----
+- tdx_ollama_pair_builder.py: original end-to-end extraction script
+- extraction/extract_ticket_pairs.py: cleaner grouped extraction CLI
 
-## Example Data Artifacts
+### Training
 
-Included sample artifacts:
+- training/train_sentence_transformer.py
 
-* `simulated_200.jsonl`
-* `out_pairs/extracted_pairs.jsonl`
-* `out_pairs/train_pairs.csv`
-* `out_pairs/triplets.jsonl`
-* `ticket_eval_report.json`
+### Indexing
 
----
+- indexing/build_ticket_index.py
+
+### Retrieval
+
+- retrieval/answer_new_tickets.py
+
+### Evaluation
+
+- evaluation/evaluate_extraction.py
+- evaluation/evaluate_ticket_retrieval.py
+
+### Streamlit Review Tools
+
+- viewers/streamlit_ticket_viewer.py: browse simulated tickets and full threads
+- viewers/streamlit_retrieval_viewer.py: inspect top-k retrieval matches for a new ticket
 
 ## Quick Start
 
-### 1) Generate synthetic tickets
+### 1. Generate synthetic tickets
 
 ```powershell
-python tdx_simulate_tickets.py --count 200 --output simulated_200.jsonl
+python ticket_memory/simulation/examples/generate_it_threads.py `
+  --count 200 `
+  --output simulated_modular_200.jsonl `
+  --pairs-output out_pairs/simulated_modular_pairs.jsonl
 ```
 
-### 2) Extract resolved ticket pairs
+### 2. Extract ticket pairs
 
 ```powershell
-python tdx_ollama_pair_builder.py `
-  --input simulated_200.jsonl `
-  --output-dir out_pairs `
+python extraction/extract_ticket_pairs.py `
+  --input simulated_modular_200.jsonl `
+  --output-dir out_pairs_modular `
   --ollama-model qwen2.5:7b-instruct `
   --min-confidence 0.65 `
   --require-closed
 ```
 
-### 3) Train retrieval embeddings
+### 3. Train embeddings
 
 ```powershell
-python train_sentence_transformer.py `
-  --input out_pairs/train_pairs.csv `
+python training/train_sentence_transformer.py `
+  --input out_pairs_modular/train_pairs.csv `
   --output-dir models/ticket-pairs
 ```
+### Validation strategy update
 
-### 4) Build retrieval index
+During pair fine-tuning, validation originally used `CosineSimilarityEvaluator`, which is designed for continuous semantic similarity tasks where labels represent graded similarity scores.
+
+Because this project uses **binary relevance labels** for support ticket pairs:
+
+- `1` → matching issue / correct historical resolution
+- `0` → non-matching pair / hard negative
+
+validation was updated to use `BinaryClassificationEvaluator`.
+
+This evaluator:
+
+1. computes similarity scores on held-out validation pairs
+2. finds the best similarity threshold
+3. converts similarities into match / non-match predictions
+4. selects the best checkpoint using validation **accuracy**
+
+This better matches the downstream retrieval objective:
+
+> distinguish relevant historical tickets from irrelevant ones
+
+The final training setup is:
+
+- **Loss:** `CosineSimilarityLoss`
+- **Validation:** `BinaryClassificationEvaluator`
+- **System evaluation:** `Recall@K`, `MRR`
+
+This hybrid design keeps embedding learning smooth while selecting the checkpoint that best separates relevant from irrelevant support incidents.
+
+### 4. Build a retrieval index
 
 ```powershell
-python build_ticket_index.py `
-  --input out_pairs/extracted_pairs.jsonl `
+python indexing/build_ticket_index.py `
+  --input out_pairs_modular/extracted_pairs.jsonl `
   --model models/ticket-pairs `
   --output-dir retrieval_index
 ```
 
-### 5) Evaluate retrieval
+### 5. Evaluate extraction
 
 ```powershell
-python evaluate_ticket_retrieval.py `
-  --input out_pairs/train_pairs.csv `
-  --model models/ticket-pairs `
-  --top-k 5 `
-  --output ticket_eval_report.json
+python evaluation/evaluate_extraction.py `
+  --tickets simulated_modular_200.jsonl `
+  --extracted out_pairs_modular/extracted_pairs.jsonl `
+  --skipped out_pairs_modular/skipped_tickets.jsonl `
+  --output-dir extraction_eval `
+  --only-resolved
 ```
 
-### 6) Answer new tickets
+### 6. Evaluate retrieval
 
 ```powershell
-python answer_new_tickets.py `
+python evaluation/evaluate_ticket_retrieval.py `
+  --input out_pairs_modular/train_pairs.csv `
+  --model models/ticket-pairs `
+  --top-k 5 `
+  --relevance-mode exact `
+  --output ticket_eval_report.json
+```
+```powershell
+python evaluation/evaluate_ticket_retrieval.py `
+  --input out_pairs_modular/train_pairs.csv `
+  --model models/ticket-pairs `
+  --top-k 5 `
+  --relevance-mode category `
+  --output ticket_eval_category.json
+```
+
+### 7. Retrieve similar historical fixes for a new ticket
+
+```powershell
+python retrieval/answer_new_tickets.py `
   --input example.json `
   --model models/ticket-pairs `
   --index-dir retrieval_index `
@@ -202,65 +285,93 @@ python answer_new_tickets.py `
   --min-score 0.55
 ```
 
----
+### 8. Review tickets in Streamlit
 
-## Retrieval Method
-
-The system uses **L2-normalized sentence embeddings**.
-
-Similarity scoring:
-
-```python
-score = query_embedding @ corpus_embedding
+```powershell
+python -m streamlit run viewers/streamlit_ticket_viewer.py
 ```
 
-Because both vectors are normalized, this dot product is equivalent to:
+### 9. Review retrieval matches in Streamlit
 
-> **cosine similarity**
+```powershell
+python -m streamlit run viewers/streamlit_retrieval_viewer.py
+```
 
-This makes retrieval fast and numerically stable.
+## Evaluation Notes
 
----
+`evaluation/evaluate_extraction.py` reports:
 
-## Key ML Insight
+- extraction precision, recall, and F1
+- fine-grained category accuracy
+- family-level accuracy
+- issue and resolution text-similarity metrics
+- confusion matrices
+- skipped-reason breakdowns
 
-A major finding from this project:
+`evaluation/evaluate_ticket_retrieval.py` reports:
 
-> **retrieval quality became stronger than answer usefulness**
+- `Recall@K`
+- `MRR`
+- top-1 exact-category accuracy
+- top-1 family accuracy
+- mean first-positive rank
+- median first-positive rank
 
-The system reliably retrieved the correct resolution family for paraphrased tickets, but practical usefulness was limited by the brevity and generic phrasing of stored resolutions rather than by embedding retrieval quality.
+## Current Results
+
+### Extraction quality
+
+- Precision: `1.0000`
+- Recall: `0.9767`
+- F1: `0.9882`
+- Fine-grained category accuracy: `0.9286`
+- Family accuracy: `0.9524`
+
+### Retrieval quality
+
+Evaluated on 130 unique ticket issues using different relevance definitions:
+
+#### Exact match (same ticket)
+
+- `Recall@1`: `0.215`
+- `Recall@3`: `0.562`
+- `Recall@5`: `0.754`
+- `MRR`: `0.437`
+- median first-positive rank: `3`
+
+This measures how often the model retrieves the *exact same historical ticket*.
+
+The relatively low top-1 accuracy is expected: many tickets share **equivalent resolutions expressed with different wording or slight variations** (e.g., MFA resync vs re-enrollment, printer reinstall vs remapping). The model often retrieves a *semantically correct alternative* rather than the exact original instance.
+
+#### Category-level match (same issue type)
+
+- `Recall@1`: `0.915`
+- `Recall@3`: `0.923`
+- `Recall@5`: `0.977`
+- `MRR`: `0.934`
+
+This reflects practical usefulness: retrieving a fix from the correct issue category.
+
+In most cases, even when the exact ticket is not retrieved, the model returns a resolution with the correct remediation pattern (e.g., MFA reset, printer reinstall, VPN profile refresh).
+
+#### Summary
+
+- The model is **moderately accurate at exact ticket retrieval**
+- The model is **highly accurate at retrieving the correct type of resolution**
+- For over 90% of queries, the top result already belongs to the correct issue category
+
+This indicates the embedding space clusters tickets by **resolution semantics rather than exact instance identity**, which is desirable for support-assist workflows.
 
 
-My next major improvement step is richer resolution synthesis.
+## Stack
 
----
+- `sentence-transformers`
+- `torch`
+- `numpy`
+- `requests`
+- `streamlit`
+- Ollama with `qwen2.5:7b-instruct`
 
-## Recommended GitHub Structure
+## Notes
 
-Commit:
-
-* source scripts
-* README
-* synthetic sample data
-* processed pair data
-* evaluation reports
-
-Exclude:
-
-* `.venv/`
-* `models/`
-* `retrieval_index/`
-* checkpoints
-* `.npy`
-* large generated outputs
-
----
-
-## Future Improvements
-
-- Improve how resolutions are stored by generating richer fix summaries that include the root cause, steps taken, verification, and follow-up recommendations
-- Add category-level confusion matrix analysis to better understand which issue types are most often confused during retrieval
-- Evaluate on a true held-out train/test split to measure generalization on unseen ticket issues
-- Combine BM25 keyword search with dense embeddings for better handling of exact IT terms, software names, and error codes
-- Build a lightweight UI demo for help desk agents to test ticket retrieval interactively
-- Add sample screenshots showing example ticket inputs, retrieved historical fixes, and confidence scores
+- The root-level scripts remain as compatibility wrappers so existing commands do not break while the grouped layout becomes the default.

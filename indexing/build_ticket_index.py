@@ -29,11 +29,15 @@ import sys
 from pathlib import Path
 from typing import Dict, List
 
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
 
-DEFAULT_TEXT_MODE = "query"
+DEFAULT_TEXT_MODE = "query_positive"
 
 
 def parse_args() -> argparse.Namespace:
